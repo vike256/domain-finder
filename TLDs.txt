@@ -65,7 +65,6 @@ arab
 aramco
 archi
 army
-arpa
 art
 arte
 as
@@ -355,7 +354,6 @@ eat
 ec
 eco
 edeka
-edu
 education
 ee
 eg
@@ -493,7 +491,6 @@ goog
 google
 gop
 got
-gov
 gp
 gq
 gr
@@ -750,8 +747,6 @@ merckmsd
 mg
 mh
 miami
-microsoft
-mil
 mini
 mint
 mit
