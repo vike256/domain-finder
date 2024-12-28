@@ -29,6 +29,7 @@ def process_namefile(path):
             return namelist
     except Exception as e:
         print(f'Error while processing namefile: {e}')
+        sys.exit()
         return []
 
 
