@@ -20,6 +20,18 @@ def is_domain_available(domain):
         return True
     return False
 
+
+def process_namefile(path):
+    try:
+        with open(path, 'r') as file:
+            namelist = file.read()
+            namelist = namelist.split()
+            return namelist
+    except Exception as e:
+        print(f'Error while processing namefile: {e}')
+        return []
+
+
 def main():
     args = parse_arguments()
     names = []
@@ -35,6 +47,9 @@ def main():
     if args.name:
         names.extend(args.name)
     
+    if args.namefile:
+        names.extend(process_namefile(args.namefile[0]))
+    
     if args.tld:
         tlds.extend(args.tld)
     else:
@@ -43,7 +58,7 @@ def main():
             tld_list = tld_list.split()
             for tld in tld_list:
                 if args.tld_max:
-                    if len(tld) <= args.tld_max:
+                    if len(tld) <= int(args.tld_max[0]):
                         tlds.append(tld)
                 else:
                     tlds.append(tld)
