@@ -24,6 +24,9 @@ def main():
     args = parse_arguments()
     names = []
     tlds = []
+    found_available = 0
+    found_not_available = 0
+    checked_count = 0
 
     if not args.name and not args.namefile:
         print('Please provide -name or -namefile') 
@@ -52,8 +55,14 @@ def main():
                 if is_domain_available(domain):
                     print(f'{domain} is available')
                     output_file.write(f'{domain}\n')
+                    found_available += 1
                 else:
                     print(f'{domain} is not available')
+                    found_not_available += 1
+                checked_count += 1
+        print(f'Checked {checked_count} domains')
+        print(f'{found_available} were available')
+        print(f'{found_not_available} were not available')
         print('All available domains saved in available_domains.txt')
 
 
