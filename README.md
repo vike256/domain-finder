@@ -1,0 +1,1 @@
+A terminal program to check for available domains. 
