@@ -15,8 +15,8 @@ def parse_arguments():
      
 
 def is_domain_available(domain):
-    whois = subprocess.run(['whois', domain], stdout=subprocess.PIPE).stdout.decode('utf-8')
-    if 'Domain not found' in whois:
+    whois = subprocess.run(['whois', domain], stdout=subprocess.PIPE).stdout.decode('utf-8').lower()
+    if 'not found' in whois:
         return True
     return False
 
