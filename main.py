@@ -1,6 +1,8 @@
 import subprocess
 import argparse
 import sys
+import concurrent.futures
+from time import time
 
 def parse_arguments():
     parser = argparse.ArgumentParser(
@@ -17,8 +19,8 @@ def parse_arguments():
 def is_domain_available(domain):
     whois = subprocess.run(['whois', domain], stdout=subprocess.PIPE).stdout.decode('utf-8').lower()
     if 'not found' in whois:
-        return True
-    return False
+        return domain, True
+    return domain, False
 
 
 def process_namefile(path):
@@ -34,11 +36,11 @@ def process_namefile(path):
 
 
 def main():
+    start_time = time()
     args = parse_arguments()
     names = []
     tlds = []
-    found_available = 0
-    found_not_available = 0
+    available = []
     checked_count = 0
 
     if not args.name and not args.namefile:
@@ -66,23 +68,29 @@ def main():
                     tlds.append(tld)
 
     with open('available_domains.txt', 'w') as output_file:
-        for name in names:
-            for tld in tlds:
-                domain = f'{name}.{tld}'
-                if is_domain_available(domain):
-                    print(f'{domain} is available')
-                    output_file.write(f'{domain}\n')
-                    found_available += 1
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            futures = []
+            for name in names:
+                for tld in tlds:
+                    futures.append(executor.submit(is_domain_available, f'{name}.{tld}'))
+            
+            for future in concurrent.futures.as_completed(futures):
+                result_domain, result = future.result()
+                if result:
+                    available.append(result_domain)
+                    print(f'{result_domain}, AVAILABLE')
                 else:
-                    print(f'{domain} is not available')
-                    found_not_available += 1
+                    print(f'{result_domain}, not available')
                 checked_count += 1
+        available.sort()
+        output_string = ''.join(f'{d}\n' for d in available)
+        output_file.write(output_string)
+        found = len(available)
+        print(f'Finished in {time() - start_time:.2f} seconds')
         print(f'Checked {checked_count} domains')
-        print(f'{found_available} were available')
-        print(f'{found_not_available} were not available')
+        print(f'{found} were available')
+        print(f'{checked_count - found} were not available')
         print('All available domains saved in available_domains.txt')
-
-
 
 
 if __name__ == '__main__':
