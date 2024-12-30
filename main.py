@@ -17,7 +17,13 @@ def parse_arguments():
      
 
 def is_domain_available(domain):
-    whois = subprocess.run(['whois', domain], stdout=subprocess.PIPE).stdout.decode('utf-8').lower()
+    try:
+        whois = subprocess.run(['whois', domain], stdout=subprocess.PIPE, timeout=10).stdout.decode('utf-8').lower()
+    except subprocess.TimeoutExpired:
+        return domain, False
+    except Exception as e:
+        print(f'Could not connect to', domain, e)
+        return domain, False
     if 'not found' in whois:
         return domain, True
     return domain, False
