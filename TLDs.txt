@@ -148,7 +148,6 @@ dealer
 deals
 degree
 delivery
-delivery?
 democrat
 dental
 dentist
@@ -416,7 +415,6 @@ place
 plumbing
 plus
 poker
-porn
 press
 pro
 prodazha
@@ -464,7 +462,6 @@ science
 se.net
 security
 services
-sex
 sexy
 sg
 sh
